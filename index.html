@@ -82,6 +82,13 @@
           transition: opacity 2s ease-in-out;
           text-align: center;
         }
+        #languageSelection{
+          padding: 10px;
+          background-color: #555;
+          margin-bottom: 10px;
+          border-radius: 5px;
+          color: #fff;
+        }
     </style>
   </head>
   <body>
@@ -89,6 +96,10 @@
       <div id="alertContainer">
         <div id="alert" style="display: none;"></div>
       </div>
+      <select id="languageSelection">
+        <option value="EN">English</option>
+        <option value="NOR">Norwegian</option>
+      </select>
     </nav>
     <form>
       <input type="text" id="searchInput" placeholder="type something to search">
@@ -97,13 +108,21 @@
     <ul id="results"></ul>
     <script>
       let words;
-
-      fetch('EN_words.txt')
-      .then(response => response.text())
-      .then(data => {
-        words = data.split('\n');
-        words.sort();
+      let language = "EN";
+      get_words();
+      const languageSelection = document.getElementById("languageSelection");
+      languageSelection.addEventListener("change", function() {
+        language = this.value;
+        get_words();
       });
+      function get_words(){
+        fetch('./'+language+'_words.txt')
+        .then(response => response.text())
+        .then(data => {
+          words = data.split('\n');
+          words.sort();
+        });
+      }
       function search() {
         event.preventDefault();
         const searchValue = document.getElementById("searchInput").value;
