@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #maze {
+        display: flex;
+        flex-wrap: wrap;
+        width: 500px;
+      }
+
+      .cell {
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+
+      .path {
+        background-color: lightgreen;
+      }
+      .start {
+        background-color: yellow;
+      }
+      .end {
+        background-color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="maze"></div>
+  </body>
+  <script src="maze.js"></script>
+</html>
