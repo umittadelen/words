@@ -1,7 +1,7 @@
 from PIL import Image
 
 # Size of the image
-width, height = 4096, 4096
+width, height = 40960, 40960
 
 # Create a new transparent image
 img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
