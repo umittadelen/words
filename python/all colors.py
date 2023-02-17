@@ -10,7 +10,7 @@ img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
 for r in range(256):
   for g in range(256):
     for b in range(256):
-      for a in range(101):
+      for a in range(256):
         # Set the pixel color with the given transparency
         print(f"r:{r} g:{g} b:{b} a:{a}")
         img.putpixel((r, g), (r, g, b, int(255 * (a / 100))))
