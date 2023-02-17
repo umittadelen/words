@@ -14,6 +14,7 @@ for x in range(width):
         for b in range(256):
           for a in range(256):
             # Set the pixel color with the given transparency
+            print(f"x:{x} y:{y} r:{r} g:{g} b:{b} a:{a}")
             img.putpixel((x, y), (r, g, b, a))
 
 # Save the image to the desktop
