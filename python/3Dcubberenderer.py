@@ -86,7 +86,7 @@ while running:
                 elif event.key == pygame.K_PAGEDOWN:
                     angle_z -= 0.1
 
-# Draw the cube
-draw_cube()
+    # Draw the cube
+    draw_cube()
 
 pygame.quit()
