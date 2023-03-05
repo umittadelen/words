@@ -73,17 +73,17 @@ while running:
                 # Handle key presses
                 if event.key == pygame.K_ESCAPE:
                     running = False
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_w:
                     angle_x += 0.1
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_s:
                     angle_x -= 0.1
-                elif event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_a:
                     angle_y += 0.1
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_d:
                     angle_y -= 0.1
-                elif event.key == pygame.K_PAGEUP:
+                elif event.key == pygame.K_q:
                     angle_z += 0.1
-                elif event.key == pygame.K_PAGEDOWN:
+                elif event.key == pygame.K_e:
                     angle_z -= 0.1
 
     # Draw the cube
