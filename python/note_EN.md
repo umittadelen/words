@@ -1,0 +1,4 @@
+friend
+whom
+trust
+listener
