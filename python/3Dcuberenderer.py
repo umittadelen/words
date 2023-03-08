@@ -1,155 +1,75 @@
-import pygame, sys
-from pygame.locals import *
-import math
+import pygame
+import random
+
+# Define colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 # Initialize Pygame
 pygame.init()
 
-# Set up the display
-WIDTH = 640
-HEIGHT = 480
-DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('3D Cube')
+# Set the dimensions of the screen
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# Define the vertices of the cube
-vertices = [
-    [-1, -1, -1],
-    [1, -1, -1],
-    [1, 1, -1],
-    [-1, 1, -1],
-    [-1, -1, 1],
-    [1, -1, 1],
-    [1, 1, 1],
-    [-1, 1, 1]
-]
+# Set the title of the window
+pygame.display.set_caption("Circle Collision Example")
 
-# Define the edges of the cube
-edges = [
-    (0, 1),
-    (1, 2),
-    (2, 3),
-    (3, 0),
-    (4, 5),
-    (5, 6),
-    (6, 7),
-    (7, 4),
-    (0, 4),
-    (1, 5),
-    (2, 6),
-    (3, 7)
-]
+# Create a list of circles
+circles = []
+for i in range(10):
+    x = random.randint(0, SCREEN_WIDTH)
+    y = random.randint(0, SCREEN_HEIGHT)
+    r = random.randint(20, 50)
+    vx = random.randint(-5, 5)
+    vy = random.randint(-5, 5)
+    circles.append({'x': x, 'y': y, 'r': r, 'vx': vx, 'vy': vy})
 
-# Define the camera position and rotation
-camera_position = [0, 0, -5]
-camera_rotation = [0, 0, 0]
+# Define a function to check for circle collisions
+def circle_collision(circle1, circle2):
+    distance = ((circle1['x'] - circle2['x']) ** 2 + (circle1['y'] - circle2['y']) ** 2) ** 0.5
+    if distance <= circle1['r'] + circle2['r']:
+        return True
+    else:
+        return False
 
-# Define the projection parameters
-fov = 90
-near = 0.1
-far = 1000
-aspect_ratio = WIDTH / HEIGHT
+# Define the main game loop
+running = True
+while running:
 
-# Define a function to multiply two matrices
-# Define a function to multiply two matrices or a matrix and a scalar
-def matrix_multiply(a, b):
-    rows_a, cols_a = len(a), len(a[0])
-    rows_b, cols_b = len(b), len(b[0])
-
-    if cols_a != rows_b:
-        raise ValueError("Number of columns in A must match number of rows in B")
-
-    result = [[0 for _ in range(cols_b)] for _ in range(rows_a)]
-
-    for i in range(rows_a):
-        for j in range(cols_b):
-            for k in range(cols_a):
-                result[i][j] += a[i][k] * b[k][j]
-
-    return result
-
-# Define a function to project the vertices onto the screen
-def project(vertex):
-    x, y, z = vertex
-
-    # Apply camera rotation
-    x, y, z = rotate_x(x, y, z, camera_rotation[0])
-    x, y, z = rotate_y(x, y, z, camera_rotation[1])
-    x, y, z = rotate_z(x, y, z, camera_rotation[2])
-
-    # Apply camera translation
-    x += camera_position[0]
-    y += camera_position[1]
-    z += camera_position[2]
-
-    # Perform perspective projection
-    fov_radians = math.radians(fov)
-    f = 1 / math.tan(fov_radians / 2)
-    projection_matrix = [
-        [aspect_ratio * f, 0, 0, 0],
-        [0, f, 0, 0],
-        [0, 0, (far + near) / (near - far), -1],
-        [0, 0, (2 * far * near) / (near - far), 0]
-    ]
-    x, y, z, w = matrix_multiply([x, y, z, 1], projection_matrix)
-    x = x / w
-    y = y / w
-
-    # Scale and shift the projected point to the screen coordinates
-    x = (x + 1) * WIDTH / 2
-    y = (y + 1) * HEIGHT / 2
-
-    return int(x), int(y)
-
-# Define a function to rotate a point around the x-axis
-def rotate_x(x, y, z, angle):
-    radians = math.radians(angle)
-    cos = math.cos(radians)
-    sin = math.sin(radians)
-    y = y * cos - z * sin
-    z = y * sin + z * cos
-    return x, y, z
-
-# Define a function to rotate a point around the y-axis
-def rotate_y(x, y, z, angle):
-    radians = math.radians(angle)
-    cos = math.cos(radians)
-    sin = math.sin(radians)
-    x = x * cos + z * sin
-    z = -x * sin + z * cos
-    return x, y, z
-
-# Define a function to rotate a point around the z-axis
-def rotate_z(x, y, z, angle):
-    radians = math.radians(angle)
-    cos = math.cos(radians)
-    sin = math.sin(radians)
-    x = x * cos - y * sin
-    y = x * sin + y * cos
-    return x, y, z
-
-# Start the main game loop
-clock = pygame.time.Clock()
-while True:
     # Handle events
     for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+        if event.type == pygame.QUIT:
+            running = False
 
     # Clear the screen
-    DISPLAY.fill((0, 0, 0))
+    screen.fill(WHITE)
 
-    # Draw the edges of the cube
-    for edge in edges:
-        start = project(vertices[edge[0]])
-        end = project(vertices[edge[1]])
-        pygame.draw.line(DISPLAY, (255, 255, 255), start, end)
+    # Update the positions of the circles
+    for circle in circles:
+        circle['x'] += circle['vx']
+        circle['y'] += circle['vy']
 
-    # Rotate the camera
-    camera_rotation[1] += 1
+        # Check for collisions with the edges of the screen
+        if circle['x'] - circle['r'] < 0 or circle['x'] + circle['r'] > SCREEN_WIDTH:
+            circle['vx'] = -circle['vx']
+        if circle['y'] - circle['r'] < 0 or circle['y'] + circle['r'] > SCREEN_HEIGHT:
+            circle['vy'] = -circle['vy']
+
+        # Check for collisions with other circles
+        for other_circle in circles:
+            if circle != other_circle and circle_collision(circle, other_circle):
+                circle['vx'] = -circle['vx']
+                circle['vy'] = -circle['vy']
+                other_circle['vx'] = -other_circle['vx']
+                other_circle['vy'] = -other_circle['vy']
+
+        # Draw the circle
+        pygame.draw.circle(screen, BLACK, (int(circle['x']), int(circle['y'])), circle['r'])
 
     # Update the display
     pygame.display.update()
 
-    # Tick the clock
-    clock.tick(60)
+# Quit Pygame
+pygame.quit()
